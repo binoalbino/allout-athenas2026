@@ -405,20 +405,35 @@
 <script>
   (function() {
     var form = document.getElementById('leadForm');
-    var iframe = document.querySelector('iframe[name="hidden_iframe"]');
-    var overlay = document.getElementById('successOverlay');
     var btn = document.getElementById('submitBtn');
-    var firstLoad = true;
-
-  iframe.addEventListener('load', function() {
-    if (firstLoad) { firstLoad = false; return; }
-    form.reset();
-    window.location.href = '/obrigado';
-  });
-
-    form.addEventListener('submit', function() {
+    var sending = false;
+ 
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (sending) return;
+      sending = true;
       btn.disabled = true;
       btn.textContent = 'Enviando...';
+ 
+      var ctrl = new AbortController();
+      var timer = setTimeout(function() { ctrl.abort(); }, 10000);
+ 
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        mode: 'no-cors',
+        signal: ctrl.signal
+      }).then(function() {
+        clearTimeout(timer);
+        form.reset();
+        window.location.href = '/obrigado';
+      }).catch(function() {
+        clearTimeout(timer);
+        sending = false;
+        btn.disabled = false;
+        btn.textContent = 'Quero concorrer';
+        alert('Não foi possível enviar agora. Confira sua conexão e tente novamente.');
+      });
     });
   })();
 </script>
