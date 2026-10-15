@@ -410,13 +410,11 @@
     var btn = document.getElementById('submitBtn');
     var firstLoad = true;
 
-    iframe.addEventListener('load', function() {
-      if (firstLoad) { firstLoad = false; return; }
-      overlay.classList.add('show');
-      btn.disabled = false;
-      btn.textContent = 'Quero concorrer';
-      form.reset();
-    });
+  iframe.addEventListener('load', function() {
+    if (firstLoad) { firstLoad = false; return; }
+    form.reset();
+    window.location.href = 'obrigado.html';
+  });
 
     form.addEventListener('submit', function() {
       btn.disabled = true;
