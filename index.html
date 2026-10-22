@@ -396,7 +396,6 @@
     var form = document.getElementById('leadForm');
     var btn = document.getElementById('submitBtn');
     var msg = document.getElementById('formMsg');
-    var overlay = document.getElementById('successOverlay');
     var sending = false;
 
     if (!form) {
@@ -425,10 +424,7 @@
           throw new Error('Servidor respondeu ' + resposta.status);
         }
         form.reset();
-        sending = false;
-        btn.disabled = false;
-        btn.textContent = 'Quero concorrer';
-        if (overlay) overlay.classList.add('show');
+        window.location.href = '/obrigado.html';
       }).catch(function(erro) {
         clearTimeout(timer);
         sending = false;
